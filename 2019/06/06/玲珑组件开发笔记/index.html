@@ -53,7 +53,7 @@
           
           
         </div>
-        <p>关于玲珑组件开发中遇到的一些注意事项，方便同事在开发中遇到问题时进行参考。</p>
+        <p>关于玲珑组件开发中遇到的一些注意事项，方便同事在开发中遇到问题时进行参考。<br>&lt;!– </p>
 <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>羚珑lc版本：0.1.33<br>Taro版本：1.2.20<br>node版本：v10.14.2</p>
 <h1 id="相关网址"><a href="#相关网址" class="headerlink" title="相关网址"></a>相关网址</h1><p>[夸克官网] (<a href="http://quark.jd.com/" target="_blank" rel="noopener">http://quark.jd.com/</a>)<br>[夸克预发环境官网] (<a href="http://quark-test.jd.com/" target="_blank" rel="noopener">http://quark-test.jd.com/</a>)<br>[夸克组件开发文档] (<a href="http://bee.jd.com/d/quark-components-docs/" target="_blank" rel="noopener">http://bee.jd.com/d/quark-components-docs/</a>)<br>[玲珑官网] (<a href="https://ling.jd.com/" target="_blank" rel="noopener">https://ling.jd.com/</a>)<br>[玲珑预发环境官网] (<a href="http://ling-test.jd.com/" target="_blank" rel="noopener">http://ling-test.jd.com/</a>)</p>
 <h1 id="关于夸克、阿童木、羚珑之间的关系"><a href="#关于夸克、阿童木、羚珑之间的关系" class="headerlink" title="关于夸克、阿童木、羚珑之间的关系"></a>关于夸克、阿童木、羚珑之间的关系</h1><center><br>  <img src="/img/1.png" alt="夸克-阿童木-羚珑之间的关系"><br>  <font color="#aaa">关于夸克、阿童木、羚珑之间的关系</font><br><br></center>
@@ -112,8 +112,12 @@
 </ul>
 <center><br>  <img src="/img/3.png" alt="父子组件关系" width="300"><br>  <font color="#aaa">父子组件关系</font><br><br></center>
 
-<p>由于阿童木编辑环境与预览/线上环境有出入，编辑器环境下子组件被包裹了2层包装，而预览/线上环境没有，所以为了统一，在获取子组件的实例时需要递归寻找</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @name 递归寻找特定组件(主要为了处理编辑器跟预览时组件的层级不一样)</span><br><span class="line">  * @memberof IDConatainerComponent</span><br><span class="line">  */</span><br><span class="line">reduceFindChild = (node, name) =&gt; &#123;</span><br><span class="line">  if (node.type &amp;&amp; node.type.name === name) &#123;</span><br><span class="line">    return node</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    if (node.props.children &amp;&amp; !(node.props.children instanceof Array)) &#123;</span><br><span class="line">      return this.reduceFindChild(node.props.children, name)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return null</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">//  调用</span><br><span class="line">this.props.children.map((node) =&gt; &#123;</span><br><span class="line">  this.reduceFindChild(node, &apos;子组件的name&apos;) </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<p>由于阿童木编辑环境与预览/线上环境有出入，编辑器环境下子组件被包裹了2层包装，而预览/线上环境没有，所以为了统一，在获取子组件的实例时需要递归寻找<br><code>`</code><br>/**</p>
+<ul>
+<li>@name 递归寻找特定组件(主要为了处理编辑器跟预览时组件的层级不一样)</li>
+<li>@memberof IDConatainerComponent<br>*/<br>reduceFindChild = (node, name) =&gt; {<br>if (node.type &amp;&amp; node.type.name === name) {<br>return node<br>} else {<br>if (node.props.children &amp;&amp; !(node.props.children instanceof Array)) {<br>  return this.reduceFindChild(node.props.children, name)<br>} else {<br>  return null<br>}<br>}<br>}<br>//  调用<br>this.props.children.map((node) =&gt; {<br>this.reduceFindChild(node, ‘子组件的name’)<br>})<br><code>`</code> –&gt;</li>
+</ul>
+</li>
 </ul>
 
       </section>
