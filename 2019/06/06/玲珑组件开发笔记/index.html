@@ -9,7 +9,7 @@
     <link rel="icon" href="/favicon.ico">
   
     
-  <title>Azu&#39;s blog</title>
+  <title>玲珑组件开发笔记 | Azu&#39;s blog</title>
   <meta name="description" content="">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
@@ -45,7 +45,7 @@
     <article>
       <section class="content markdown-body">
         <h1>
-          Untitled
+          玲珑组件开发笔记
         </h1>
         <div class="post-meta">
           <i class="fa fa-calendar" aria-hidden="true"></i> <time>
@@ -53,13 +53,84 @@
           
           
         </div>
-        
+        <p>关于玲珑组件开发中遇到的一些注意事项，方便同事在开发中遇到问题时进行参考。</p>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>羚珑lc版本：0.1.33<br>Taro版本：1.2.20<br>node版本：v10.14.2</p>
+<h1 id="相关网址"><a href="#相关网址" class="headerlink" title="相关网址"></a>相关网址</h1><p>[夸克官网] (<a href="http://quark.jd.com/" target="_blank" rel="noopener">http://quark.jd.com/</a>)<br>[夸克预发环境官网] (<a href="http://quark-test.jd.com/" target="_blank" rel="noopener">http://quark-test.jd.com/</a>)<br>[夸克组件开发文档] (<a href="http://bee.jd.com/d/quark-components-docs/" target="_blank" rel="noopener">http://bee.jd.com/d/quark-components-docs/</a>)<br>[玲珑官网] (<a href="https://ling.jd.com/" target="_blank" rel="noopener">https://ling.jd.com/</a>)<br>[玲珑预发环境官网] (<a href="http://ling-test.jd.com/" target="_blank" rel="noopener">http://ling-test.jd.com/</a>)</p>
+<h1 id="关于夸克、阿童木、羚珑之间的关系"><a href="#关于夸克、阿童木、羚珑之间的关系" class="headerlink" title="关于夸克、阿童木、羚珑之间的关系"></a>关于夸克、阿童木、羚珑之间的关系</h1><center><br>  <img src="/img/1.png" alt="夸克-阿童木-羚珑之间的关系"><br>  <font color="#aaa">关于夸克、阿童木、羚珑之间的关系</font><br><br></center>
+
+<blockquote>
+<p>so：在开发一个完整的项目的时候需要以下几个步骤</p>
+</blockquote>
+<ol>
+<li>开发【夸克】组件</li>
+<li>使用【阿童木】生成搭建模版</li>
+<li>使用【羚珑】配置模版并发布</li>
+</ol>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><p>开发前的准备可参考官方文档，里面已经说明得很详细了：<br><a href="http://bee.jd.com/d/quark-components-docs/preparation" target="_blank" rel="noopener">http://bee.jd.com/d/quark-components-docs/preparation</a></p>
+<p>下面着重讲一下我在开发中遇到的问题：</p>
+<hr>
+<h2 id="环境判断"><a href="#环境判断" class="headerlink" title="环境判断"></a>环境判断</h2><ul>
+<li>this.props.isAtom：表示当前处于阿童木编辑器环境</li>
+<li>this.props.isPreview： 表示当前处于预览页面</li>
+</ul>
+<hr>
+<h2 id="事件发射器"><a href="#事件发射器" class="headerlink" title="事件发射器"></a>事件发射器</h2><p>Taro有自带的eventBus，可用于组件之间的通讯，用法如下：</p>
+<ul>
+<li>Taro.eventCenter.on(‘xxx’,fn)  监听事件</li>
+<li>Taro.eventCenter.once(‘xxx’,fn)  监听一次事件</li>
+<li>Taro.eventCenter.off(‘xxx’)    取消事件</li>
+<li>Taro.eventCenter.trigger(‘xxx’) 触发事件</li>
+</ul>
+<hr>
+<h2 id="开发模式"><a href="#开发模式" class="headerlink" title="开发模式"></a>开发模式</h2><p>当组件完成发布申请上线后，并不会出现在阿童木编辑的组件菜单上，需要审核才能看到，但是出于开发调试需要，可在编辑器的url上添加contrib=1让组件显示出来</p>
+<ul>
+<li>原本的地址：<a href="https://ling.jd.com/atom/h5/act?type=pagetpl&amp;pagetype=mytpl" target="_blank" rel="noopener">https://ling.jd.com/atom/h5/act?type=pagetpl&amp;pagetype=mytpl</a></li>
+<li>开发模式地址：<a href="https://ling.jd.com/atom/h5/act?type=pagetpl&amp;pagetype=mytpl&amp;contrib=1" target="_blank" rel="noopener">https://ling.jd.com/atom/h5/act?type=pagetpl&amp;pagetype=mytpl&amp;contrib=1</a></li>
+</ul>
+<center><br>  <img src="/img/4.png" alt="开发模式寻找自己的组件" width="500"><br>  <font color="#aaa">开发模式寻找自己的组件</font><br><br></center>
+
+<hr>
+<h2 id="config-js"><a href="#config-js" class="headerlink" title="config.js"></a>config.js</h2><ul>
+<li><strong>文件说明</strong>：它是一个暴露给 “阿童木编辑器” 编辑模版时可供编辑的配置项，如：配置展示商品数、配置是否展示角标等。最终会以props的属性注入到组件内部供使用。</li>
+<li><strong>配置文档</strong>：<a href="http://bee.jd.com/d/quark-components-docs/config-types" target="_blank" rel="noopener">http://bee.jd.com/d/quark-components-docs/config-types</a></li>
+<li><strong>注意问题</strong>：<ul>
+<li><strong><em>forbid属性</em></strong>：<br>在配置时，如需对某个用户角色隐藏某个配置项的话，需要在config.js里额外添加一个属性 {forbid: xxx}，已知“merchant”为商家角色，其他需要资讯夸克组件开发者【erp：liuhuimin7（刘慧敏）】。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">  &quot;skuId&quot;: &#123;</span><br><span class="line">    &quot;category&quot;: &quot;data&quot;,   //  配置类型</span><br><span class="line">    &quot;text&quot;: &quot;商品组ID&quot;,    //  描述</span><br><span class="line">    &quot;type&quot;: &quot;string&quot;,     //  编辑格式：文本框</span><br><span class="line">    &quot;forbid&quot;: [&apos;merchant&apos;]  //  禁止merchant【商家】编辑</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="layouts-json"><a href="#layouts-json" class="headerlink" title="layouts.json"></a>layouts.json</h2><ul>
+<li><p><strong>文件说明</strong>：<br>它主要用于管理组件props，为props提供<strong>默认值</strong>，如：展示商品的数目默认为4个、默认展示角标等。<br>它是一个对象数组，数组中每个对象对应一个样式，如：1行3个，1行2个。相应的在阿童木编辑器里就会出现2个组件（同一个组件源，默认参数不一样）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;title&quot;: &quot;1行3个&quot;,                // 标题</span><br><span class="line">    &quot;cover&quot;: &quot;covers/layout-1.jpg&quot;,  // 封面</span><br><span class="line">    &quot;props&quot;: &#123;                       // 注入的props</span><br><span class="line">      &quot;col&quot;: 3,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    &quot;title&quot;: &quot;1行2个&quot;,</span><br><span class="line">    &quot;cover&quot;: &quot;covers/layout-2.jpg&quot;,</span><br><span class="line">    &quot;props&quot;: &#123;</span><br><span class="line">      &quot;col&quot;: 2,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<center><br>  <img src="/img/2.png" alt="阿童木编辑器商品组件" width="500"><br>  <font color="#aaa">阿童木编辑器商品组件</font><br><br></center>
+</li>
+<li><p><strong>注意问题</strong></p>
+<ul>
+<li><strong><em>canPlace属性</em></strong><br>在配置如，如果需要给组件内部再潜入一个组件时，需要添加额外的配置属性{“canPlace”: true}，如：在一个【商品框组件】内添加【角标组件】、【购物车组件】。最终嵌入的子组件的引用会出现在父组件的this.props.children里面。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;title&quot;: &quot;商品框组件&quot;,</span><br><span class="line">    &quot;cover&quot;: &quot;covers/default.png&quot;,</span><br><span class="line">    &quot;props&quot;: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;canPlace&quot;: true    //  允许组件内嵌入子组件</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<center><br>  <img src="/img/3.png" alt="父子组件关系" width="300"><br>  <font color="#aaa">父子组件关系</font><br><br></center>
+
+<p>由于阿童木编辑环境与预览/线上环境有出入，编辑器环境下子组件被包裹了2层包装，而预览/线上环境没有，所以为了统一，在获取子组件的实例时需要递归寻找</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @name 递归寻找特定组件(主要为了处理编辑器跟预览时组件的层级不一样)</span><br><span class="line">  * @memberof IDConatainerComponent</span><br><span class="line">  */</span><br><span class="line">reduceFindChild = (node, name) =&gt; &#123;</span><br><span class="line">  if (node.type &amp;&amp; node.type.name === name) &#123;</span><br><span class="line">    return node</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    if (node.props.children &amp;&amp; !(node.props.children instanceof Array)) &#123;</span><br><span class="line">      return this.reduceFindChild(node.props.children, name)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return null</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">//  调用</span><br><span class="line">this.props.children.map((node) =&gt; &#123;</span><br><span class="line">  this.reduceFindChild(node, &apos;子组件的name&apos;) </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+
       </section>
     </article>
     
     
   </div>
   <aside>
+    
+    <div class="toc-container">
+      <h1>
+        catalog
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#相关网址"><span class="toc-number">2.</span> <span class="toc-text">相关网址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于夸克、阿童木、羚珑之间的关系"><span class="toc-number">3.</span> <span class="toc-text">关于夸克、阿童木、羚珑之间的关系</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-number">4.</span> <span class="toc-text">注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境判断"><span class="toc-number">4.1.</span> <span class="toc-text">环境判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件发射器"><span class="toc-number">4.2.</span> <span class="toc-text">事件发射器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发模式"><span class="toc-number">4.3.</span> <span class="toc-text">开发模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#config-js"><span class="toc-number">4.4.</span> <span class="toc-text">config.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#layouts-json"><span class="toc-number">4.5.</span> <span class="toc-text">layouts.json</span></a></li></ol></li></ol>
+      </div>
+    </div>
     
   </aside>
 </main>
